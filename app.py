@@ -70,10 +70,9 @@ def filter_and_compute_time(data):
 
 # Filter and compute time and actual revenue for Actual and Budget data
 filtered_actual_data = filter_and_compute_time(actual_data)
-filtered_actual_data = filtered_actual_data.rename(columns={'Discharge Port Depart': 'Start Date', 'Last Discharge Port Depart': 'End Date', 'Total Time': 'Total Trip Time'})
+filtered_actual_data = filtered_actual_data.rename(columns={'Discharge Port Depart': 'End Date', 'Last Discharge Port Depart': 'Start Date', 'Total Time': 'Total Trip Time'})
 filtered_budget_data = filter_and_compute_time(budget_data)
-filtered_budget_data = filtered_budget_data.rename(columns={'Discharge Port Depart': 'Start Date', 'Last Discharge Port Depart': 'End Date', 'Total Time': 'Total Trip Time'})
-
+filtered_budget_data = filtered_budget_data.rename(columns={'Discharge Port Depart': 'End Date', 'Last Discharge Port Depart': 'Start Date', 'Total Time': 'Total Trip Time'})
 
 # Group by Vessel and calculate the total actual and budget revenue
 summary_actual = filtered_actual_data.groupby('Vessel').agg({'Recognized Revenue': 'sum'}).reset_index()
@@ -90,10 +89,10 @@ st.write(summary)
 # Display the filtered and computed data
 st.subheader('Filtered and Computed Actual Data')
 st.write(filtered_actual_data[
-             ['Vessel', 'Trip No', 'Start Date', 'End Date', 'Recognized Time', 'Total Trip Time', 'Recognized Revenue', 'Total Revenue']])
+             ['Vessel', 'Trip No', 'Start Date', 'End Date', 'Recognized Time', 'Trip Details', 'Total Load Quantity', 'Total Trip Time', 'Recognized Revenue', 'Total Revenue']])
 
 st.subheader('Filtered and Computed Budget Data')
 st.write(filtered_budget_data[
-             ['Vessel', 'Trip No', 'Start Date', 'End Date', 'Recognized Time', 'Total Trip Time', 'Recognized Revenue', 'Total Revenue']])
+             ['Vessel', 'Trip No', 'Start Date', 'End Date', 'Recognized Time', 'Trip Details', 'Total Load Quantity', 'Total Trip Time', 'Recognized Revenue', 'Total Revenue']])
 
 # Add any additional analysis or visualizations here
