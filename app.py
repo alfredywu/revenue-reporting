@@ -63,6 +63,14 @@ def filter_and_compute_time(data):
     data['Recognized Revenue'] = data['Recognized Revenue'].round(2)
     data['Recognized Time'] = data['Recognized Time'].round(2)
     data['Total Revenue'] = data['Total Revenue'].round(2)
+    data['Start Month Revenue'] = data.apply(
+        lambda row: row['Total Revenue'] / row['Total Time'] * row['Start Month Days'] if row['Total Time'] != 0 else 0, axis=1
+    )
+    data['Start Month Revenue'] = data['Start Month Revenue'].round(2)
+    data['End Month Revenue'] = data.apply(
+        lambda row: row['Total Revenue'] / row['Total Time'] * row['End Month Days'] if row['Total Time'] != 0 else 0, axis=1
+    )
+    data['End Month Revenue'] = data['End Month Revenue'].round(2)
     return data[
         conditions[0] | conditions[1] | conditions[2] | conditions[3]
         ]
@@ -105,10 +113,10 @@ st.write(summary)
 # Display the filtered and computed data
 st.subheader('Filtered and Computed Actual Data')
 st.write(filtered_actual_data[
-             ['Vessel', 'Trip No', 'Start Date', 'End Date', 'Recognized Time', 'Trip Details', 'Total Load Quantity', 'Total Trip Time', 'Recognized Revenue', 'Total Revenue']])
+             ['Vessel', 'Trip No', 'Start Date', 'End Date', 'Recognized Time', 'Trip Details', 'Total Load Quantity', 'Total Trip Time', 'Recognized Revenue', 'Total Revenue', 'Start Month Days', 'Start Month Revenue', 'End Month Days', 'End Month Revenue']])
 
 st.subheader('Filtered and Computed Budget Data')
 st.write(filtered_budget_data[
-             ['Vessel', 'Trip No', 'Start Date', 'End Date', 'Recognized Time', 'Trip Details', 'Total Load Quantity', 'Total Trip Time', 'Recognized Revenue', 'Total Revenue']])
+             ['Vessel', 'Trip No', 'Start Date', 'End Date', 'Recognized Time', 'Trip Details', 'Total Load Quantity', 'Total Trip Time', 'Recognized Revenue', 'Total Revenue', 'Start Month Days', 'Start Month Revenue', 'End Month Days', 'End Month Revenue']])
 
 # Add any additional analysis or visualizations here
