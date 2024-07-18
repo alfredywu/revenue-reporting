@@ -74,6 +74,7 @@ filtered_actual_data = filtered_actual_data.rename(columns={'Discharge Port Depa
 filtered_budget_data = filter_and_compute_time(budget_data)
 filtered_budget_data = filtered_budget_data.rename(columns={'Discharge Port Depart': 'End Date', 'Last Discharge Port Depart': 'Start Date', 'Total Time': 'Total Trip Time'})
 
+
 # Group by Vessel and calculate the total actual and budget revenue
 summary_actual = filtered_actual_data.groupby('Vessel').agg({'Recognized Revenue': 'sum'}).reset_index()
 summary_budget = filtered_budget_data.groupby('Vessel').agg({'Recognized Revenue': 'sum'}).reset_index()
@@ -82,10 +83,25 @@ summary_budget = filtered_budget_data.groupby('Vessel').agg({'Recognized Revenue
 summary = pd.merge(summary_actual, summary_budget, on='Vessel', how='outer', suffixes=(' (Actual)', ' (Budget)'))
 summary['Variance'] = summary['Recognized Revenue (Actual)'] - summary['Recognized Revenue (Budget)']
 
+# Calculate the totals
+total_actual = summary['Recognized Revenue (Actual)'].sum()
+total_budget = summary['Recognized Revenue (Budget)'].sum()
+total_variance = total_actual - total_budget
+
+# Create a DataFrame for the total row
+total_row = pd.DataFrame({
+    'Vessel': ['Total'],
+    'Recognized Revenue (Actual)': [total_actual],
+    'Recognized Revenue (Budget)': [total_budget],
+    'Variance': [total_variance]
+})
+
+# Concatenate the total row to the summary DataFrame
+summary = pd.concat([summary, total_row], ignore_index=True)
+
 # Display the summarized results
 st.subheader('Summarized Results by Vessel')
 st.write(summary)
-
 # Display the filtered and computed data
 st.subheader('Filtered and Computed Actual Data')
 st.write(filtered_actual_data[
